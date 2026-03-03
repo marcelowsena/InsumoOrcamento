@@ -1,0 +1,33 @@
+# Credenciais - NUNCA subir
+.env
+siengeAPI/.env
+
+# Bases de dados geradas pelo script
+siengeAPI/bases/*.json
+siengeAPI/*.json
+
+# Relatórios gerados
+relatorios/
+*.xlsx
+*.csv
+*.parquet
+
+# Cache
+cache/
+__pycache__/
+*.pyc
+*.pyo
+.pytest_cache/
+
+# VS Code
+.vscode/
+
+# Logs
+logs/
+*.log
+
+# Ambientes virtuais
+env/
+venv/
+.venv/
+envsemaforico/

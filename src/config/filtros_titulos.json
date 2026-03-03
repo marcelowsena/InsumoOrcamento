@@ -1,0 +1,25 @@
+{
+  "description": "Filtros para busca de títulos na API Sienge",
+  "habilitado": true,
+  "periodo": {
+    "description": "Período fixo para buscar TODOS os títulos do sistema",
+    "data_inicio": "2000-01-01",
+    "data_fim": "2080-12-31",
+    "observacao": "Datas fixas para buscar todos os títulos independente do vencimento"
+  },
+  "filtros": {
+    "tipos_documento": {
+      "description": "Tipos de documento para incluir na busca",
+      "modo": "incluir",
+      "valores": [
+        "REC",
+        "ADTO"
+      ]
+    }
+  },
+  "exemplos": {
+    "data_inicio": "Data fixa: 2000-01-01 (buscar desde sempre)",
+    "data_fim": "Data fixa: 2080-12-31 (buscar até muito longe)",
+    "tipos_documento": "NFS=Nota Fiscal, PCT=Provisão, DUP=Duplicata, BOL=Boleto"
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "_comentario": "Classificação ABC de insumos - Curva ABC para categorização de itens",
+  "_instrucoes": {
+    "por_insumo_id": "Mapeia insumo_id específico para classificação A, B ou C",
+    "por_grupo_recurso": "Mapeia grupo de recurso para classificação (aplica a todos insumos do grupo)",
+    "por_categoria_recurso": "Mapeia categoria de recurso para classificação (menor prioridade)",
+    "prioridade": "insumo_id > grupo_recurso > categoria_recurso (mais específico prevalece)"
+  },
+  "por_insumo_id": {
+  },
+  "por_grupo_recurso": {
+  },
+  "por_categoria_recurso": {
+  }
+}

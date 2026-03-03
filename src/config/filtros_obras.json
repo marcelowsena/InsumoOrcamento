@@ -1,0 +1,58 @@
+{
+  "description": "Configuração de filtros para obras - Defina quais obras incluir ou excluir",
+  "modo": "excluir",
+  "opcoes_modo": {
+    "incluir": "Apenas as obras listadas serão processadas",
+    "excluir": "As obras listadas serão ignoradas (padrão)"
+  },
+  "filtros": {
+    "por_id": {
+      "description": "Lista de IDs de obras para incluir/excluir",
+      "valores": [
+        9920,
+        9921,
+        9923,
+        9926,
+        9927,
+        9930,
+        9931,
+        9932,
+        9933,
+        9935,
+        29991,
+        99934,
+        29999,
+        29998,
+        29997,
+        29996,
+        29995,
+        29994,
+        29993,
+        29992,
+        2018,
+        2017,
+        2016,
+        2013,
+        2011
+      ]
+    },
+    "por_nome_contem": {
+      "description": "Excluir obras que contenham estas strings no nome",
+      "valores": [
+      ]
+    },
+    "por_empresa": {
+      "description": "Excluir obras de empresas específicas (companyId)",
+      "valores": []
+    },
+    "por_status": {
+      "description": "Filtrar por status (se disponível no futuro)",
+      "valores": []
+    }
+  },
+  "exemplos": {
+    "excluir_obras_teste": "Obras com 'teste' no nome são automaticamente excluídas",
+    "excluir_tabelas_antigas": "Obras com 'tabela antiga' são ignoradas",
+    "excluir_por_id": "Use a lista 'por_id' para excluir obras específicas"
+  }
+}
