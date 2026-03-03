@@ -1,0 +1,714 @@
+{
+  "habilitado": true,
+  "mapeamentos": {},
+  "merge_obras": {
+    "205": {
+      "obras_para_somar": [
+        9995
+      ],
+      "observacoes": "Migrar o centro de custo antigo"
+    },
+    "2025": {
+      "obras_para_somar": [
+        9925
+      ],
+      "observacoes": "Migrar o centro de custo antigo"
+    }
+  },
+  "merge_apropriacoes": {
+    "205": {
+      "03.001.001.001": {
+        "centros_para_somar": [
+          "02.001.004",
+          "03.001.001"
+        ],
+        "observacoes": "Mapeamento criado automaticamente"
+      },
+      "02.002.002.001": {
+        "centros_para_somar": [
+          "02.002.007"
+        ],
+        "observacoes": "Mapeamento criado automaticamente"
+      },
+      "02.002.003.001": {
+        "centros_para_somar": [
+          "02.002.009"
+        ],
+        "observacoes": "Mapeamento criado automaticamente"
+      },
+      "02.003.001.001": {
+        "centros_para_somar": [
+          "02.003.001"
+        ],
+        "observacoes": "Mapeamento criado automaticamente"
+      },
+      "03.001.001.002": {
+        "centros_para_somar": [
+          "03.001.002"
+        ],
+        "observacoes": "Mapeamento criado automaticamente"
+      },
+      "03.001.001.003": {
+        "centros_para_somar": [
+          "03.001.003"
+        ],
+        "observacoes": "Mapeamento criado automaticamente"
+      },
+      "03.001.001.004": {
+        "centros_para_somar": [
+          "03.001.004"
+        ],
+        "observacoes": "Mapeamento criado automaticamente"
+      },
+      "03.001.001.006": {
+        "centros_para_somar": [
+          "03.001.005"
+        ],
+        "observacoes": "Mapeamento criado automaticamente"
+      },
+      "03.002.001.001": {
+        "centros_para_somar": [
+          "03.002.001"
+        ],
+        "observacoes": "Mapeamento criado automaticamente"
+      },
+      "03.002.002.001": {
+        "centros_para_somar": [
+          "03.002.002"
+        ],
+        "observacoes": "Mapeamento criado automaticamente"
+      },
+      "03.002.003.002": {
+        "centros_para_somar": [
+          "03.002.003"
+        ],
+        "observacoes": "Mapeamento criado automaticamente"
+      },
+      "03.002.003.004": {
+        "centros_para_somar": [
+          "03.002.004"
+        ],
+        "observacoes": "Mapeamento criado automaticamente"
+      },
+      "03.002.003.005": {
+        "centros_para_somar": [
+          "03.002.005",
+          "03.002.006"
+        ],
+        "observacoes": "Mapeamento criado automaticamente"
+      },
+      "03.003.002.001": {
+        "centros_para_somar": [
+          "03.003.004"
+        ],
+        "observacoes": "Mapeamento criado automaticamente"
+      },
+      "03.003.002.002": {
+        "centros_para_somar": [
+          "03.003.005"
+        ],
+        "observacoes": "Mapeamento criado automaticamente"
+      },
+      "03.003.003.001": {
+        "centros_para_somar": [
+          "03.003.008"
+        ],
+        "observacoes": "Mapeamento criado automaticamente"
+      },
+      "05.002.001.002": {
+        "centros_para_somar": [
+          "03.003.013"
+        ],
+        "observacoes": "Mapeamento criado automaticamente"
+      },
+      "03.003.002.005": {
+        "centros_para_somar": [
+          "03.003.014"
+        ],
+        "observacoes": "Mapeamento criado automaticamente"
+      },
+      "03.004.008.002": {
+        "centros_para_somar": [
+          "03.004.010"
+        ],
+        "observacoes": "Mapeamento criado automaticamente"
+      },
+      "03.004.007.001": {
+        "centros_para_somar": [
+          "03.004.011"
+        ],
+        "observacoes": "Mapeamento criado automaticamente"
+      },
+      "03.003.002.006": {
+        "centros_para_somar": [
+          "03.004.014"
+        ],
+        "observacoes": "Mapeamento criado automaticamente"
+      },
+      "03.002.005.001": {
+        "centros_para_somar": [
+          "03.005.004"
+        ],
+        "observacoes": "Mapeamento criado automaticamente"
+      },
+      "03.003.003.004": {
+        "centros_para_somar": [
+          "03.005.005"
+        ],
+        "observacoes": "Mapeamento criado automaticamente"
+      },
+      "03.002.003.003": {
+        "centros_para_somar": [
+          "03.005.007"
+        ],
+        "observacoes": "Mapeamento criado automaticamente"
+      },
+      "02.002.002.002": {
+        "centros_para_somar": [
+          "03.005.008"
+        ],
+        "observacoes": "Mapeamento criado automaticamente"
+      },
+      "03.003.005.001": {
+        "centros_para_somar": [
+          "03.005.011"
+        ],
+        "observacoes": "Mapeamento criado automaticamente"
+      },
+      "04.001.001.001": {
+        "centros_para_somar": [
+          "04.001.001"
+        ],
+        "observacoes": "Mapeamento criado automaticamente"
+      },
+      "04.001.002.001": {
+        "centros_para_somar": [
+          "04.003.009"
+        ],
+        "observacoes": "Mapeamento criado automaticamente"
+      },
+      "04.001.002.003": {
+        "centros_para_somar": [
+          "04.004.003"
+        ],
+        "observacoes": "Mapeamento criado automaticamente"
+      },
+      "05.002.001.001": {
+        "centros_para_somar": [
+          "05.002.001"
+        ],
+        "observacoes": "Mapeamento criado automaticamente"
+      },
+      "06.002.001.001": {
+        "centros_para_somar": [
+          "06.001.002",
+          "06.002.001"
+        ],
+        "observacoes": "Mapeamento criado automaticamente"
+      },
+      "06.002.002.001": {
+        "centros_para_somar": [
+          "06.001.003",
+          "06.002.002"
+        ],
+        "observacoes": "Mapeamento criado automaticamente"
+      },
+      "06.002.003.001": {
+        "centros_para_somar": [
+          "06.002.003"
+        ],
+        "observacoes": "Mapeamento criado automaticamente"
+      },
+      "06.002.003.003": {
+        "centros_para_somar": [
+          "06.003.002"
+        ],
+        "observacoes": "Mapeamento criado automaticamente"
+      },
+      "06.002.003.004": {
+        "centros_para_somar": [
+          "06.003.003"
+        ],
+        "observacoes": "Mapeamento criado automaticamente"
+      },
+      "06.005.001.001": {
+        "centros_para_somar": [
+          "06.004.001",
+          "06.005.001"
+        ],
+        "observacoes": "Mapeamento criado automaticamente"
+      },
+      "06.005.002.001": {
+        "centros_para_somar": [
+          "06.004.002",
+          "06.005.002"
+        ],
+        "observacoes": "Mapeamento criado automaticamente"
+      },
+      "06.005.003.001": {
+        "centros_para_somar": [
+          "06.004.003",
+          "06.005.003"
+        ],
+        "observacoes": "Mapeamento criado automaticamente"
+      },
+      "06.007.001.005": {
+        "centros_para_somar": [
+          "06.006.002"
+        ],
+        "observacoes": "Mapeamento criado automaticamente"
+      },
+      "06.007.001.003": {
+        "centros_para_somar": [
+          "06.006.003"
+        ],
+        "observacoes": "Mapeamento criado automaticamente"
+      },
+      "06.007.001.002": {
+        "centros_para_somar": [
+          "06.006.004"
+        ],
+        "observacoes": "Mapeamento criado automaticamente"
+      },
+      "07.001.001.001": {
+        "centros_para_somar": [
+          "07.001.002"
+        ],
+        "observacoes": "Mapeamento criado automaticamente"
+      },
+      "07.001.002.001": {
+        "centros_para_somar": [
+          "07.001.003"
+        ],
+        "observacoes": "Mapeamento criado automaticamente"
+      },
+      "08.001.002.001": {
+        "centros_para_somar": [
+          "08.001.002",
+          "08.003.002",
+          "08.003.005"
+        ],
+        "observacoes": "Mapeamento criado automaticamente"
+      },
+      "08.001.003.001": {
+        "centros_para_somar": [
+          "08.001.003",
+          "08.002.002"
+        ],
+        "observacoes": "Mapeamento criado automaticamente"
+      },
+      "08.001.004.001": {
+        "centros_para_somar": [
+          "08.001.004",
+          "08.002.003",
+          "08.003.004"
+        ],
+        "observacoes": "Mapeamento criado automaticamente"
+      },
+      "09.002.001.001": {
+        "centros_para_somar": [
+          "09.002.001"
+        ],
+        "observacoes": "Mapeamento criado automaticamente"
+      },
+      "09.003.001.001": {
+        "centros_para_somar": [
+          "09.003.001",
+          "09.003.002",
+          "09.003.003",
+          "09.003.004",
+          "09.003.005",
+          "09.003.006",
+          "09.003.007",
+          "09.003.008",
+          "09.003.009",
+          "09.003.010",
+          "09.003.011",
+          "09.003.012",
+          "09.003.013",
+          "09.003.014",
+          "09.003.015",
+          "09.003.016",
+          "09.003.017",
+          "09.003.018",
+          "09.003.019",
+          "09.003.020",
+          "09.003.021",
+          "09.003.022",
+          "09.003.023",
+          "09.003.024",
+          "09.003.025",
+          "09.003.026",
+          "09.003.027",
+          "09.003.028",
+          "09.003.029"
+        ],
+        "observacoes": "Mapeamento criado automaticamente"
+      },
+      "09.004.001.001": {
+        "centros_para_somar": [
+          "09.005.003"
+        ],
+        "observacoes": "Mapeamento criado automaticamente"
+      },
+      "10.006.001.001": {
+        "centros_para_somar": [
+          "10.006.001"
+        ],
+        "observacoes": "Mapeamento criado automaticamente"
+      },
+      "10.006.001.008": {
+        "centros_para_somar": [
+          "10.006.033"
+        ],
+        "observacoes": "Mapeamento criado automaticamente"
+      },
+      "11.001.001.001": {
+        "centros_para_somar": [
+          "11.001.001"
+        ],
+        "observacoes": "Mapeamento criado automaticamente"
+      },
+      "11.001.007.003": {
+        "centros_para_somar": [
+          "11.009.002"
+        ],
+        "observacoes": "Mapeamento criado automaticamente"
+      },
+      "16.001.001.001": {
+        "centros_para_somar": [
+          "16.001.001"
+        ],
+        "observacoes": "Mapeamento criado automaticamente"
+      }
+    },
+    "2025": {
+      "02.002.002.001": {
+        "centros_para_somar": [
+          "02.002.007"
+        ],
+        "observacoes": "Mapeamento criado automaticamente"
+      },
+      "02.002.002.002": {
+        "centros_para_somar": [
+          "03.005.006"
+        ],
+        "observacoes": "Mapeamento criado automaticamente"
+      },
+      "02.002.003.001": {
+        "centros_para_somar": [
+          "02.002.009"
+        ],
+        "observacoes": "Mapeamento criado automaticamente"
+      },
+      "02.003.001.001": {
+        "centros_para_somar": [
+          "02.003.001"
+        ],
+        "observacoes": "Mapeamento criado automaticamente"
+      },
+      "03.001.001.001": {
+        "centros_para_somar": [
+          "03.001.001"
+        ],
+        "observacoes": "Mapeamento criado automaticamente"
+      },
+      "03.001.001.006": {
+        "centros_para_somar": [
+          "03.001.002"
+        ],
+        "observacoes": "Mapeamento criado automaticamente"
+      },
+      "03.002.001.001": {
+        "centros_para_somar": [
+          "03.002.001",
+          "03.002.005"
+        ],
+        "observacoes": "Mapeamento criado automaticamente"
+      },
+      "03.002.002.001": {
+        "centros_para_somar": [
+          "03.002.002",
+          "03.002.006"
+        ],
+        "observacoes": "Mapeamento criado automaticamente"
+      },
+      "03.002.003.001": {
+        "centros_para_somar": [
+          "03.002.003"
+        ],
+        "observacoes": "Mapeamento criado automaticamente"
+      },
+      "03.002.003.003": {
+        "centros_para_somar": [
+          "03.002.008"
+        ],
+        "observacoes": "Mapeamento criado automaticamente"
+      },
+      "03.003.001.001": {
+        "centros_para_somar": [
+          "04.003.009"
+        ],
+        "observacoes": "Mapeamento criado automaticamente"
+      },
+      "03.003.001.002": {
+        "centros_para_somar": [
+          "03.003.002"
+        ],
+        "observacoes": "Mapeamento criado automaticamente"
+      },
+      "03.003.002.001": {
+        "centros_para_somar": [
+          "03.003.004"
+        ],
+        "observacoes": "Mapeamento criado automaticamente"
+      },
+      "03.003.002.002": {
+        "centros_para_somar": [
+          "03.003.005"
+        ],
+        "observacoes": "Mapeamento criado automaticamente"
+      },
+      "03.003.002.003": {
+        "centros_para_somar": [
+          "03.003.006"
+        ],
+        "observacoes": "Mapeamento criado automaticamente"
+      },
+      "03.003.002.004": {
+        "centros_para_somar": [
+          "03.003.007"
+        ],
+        "observacoes": "Mapeamento criado automaticamente"
+      },
+      "03.003.002.005": {
+        "centros_para_somar": [
+          "03.003.014"
+        ],
+        "observacoes": "Mapeamento criado automaticamente"
+      },
+      "03.003.003.001": {
+        "centros_para_somar": [
+          "03.003.008"
+        ],
+        "observacoes": "Mapeamento criado automaticamente"
+      },
+      "03.003.003.002": {
+        "centros_para_somar": [
+          "03.003.009"
+        ],
+        "observacoes": "Mapeamento criado automaticamente"
+      },                                                               
+      "03.003.004.001": {
+        "centros_para_somar": [
+          "02.002.006"
+        ],
+        "observacoes": "Mapeamento criado automaticamente"
+      },
+      "03.004.007.001": {
+        "centros_para_somar": [
+          "03.004.007"
+        ],
+        "observacoes": "Mapeamento criado automaticamente"
+      },
+      "03.004.008.002": {
+        "centros_para_somar": [
+          "03.004.006"
+        ],
+        "observacoes": "Mapeamento criado automaticamente"
+      },
+      "04.001.001.001": {
+        "centros_para_somar": [
+          "04.001.001"
+        ],
+        "observacoes": "Mapeamento criado automaticamente"
+      },
+      "04.001.002.001": {
+        "centros_para_somar": [
+          "04.002.001"
+        ],
+        "observacoes": "Mapeamento criado automaticamente"
+      },
+      "04.001.002.002": {
+        "centros_para_somar": [
+          "04.004.003"
+        ],
+        "observacoes": "Mapeamento criado automaticamente"
+      },
+      "04.002.001.001": {
+        "centros_para_somar": [
+          "04.003.004"
+        ],
+        "observacoes": "Mapeamento criado automaticamente"
+      },
+      "05.002.001.001": {
+        "centros_para_somar": [
+          "05.002.001"
+        ],
+        "observacoes": "Mapeamento criado automaticamente"
+      },
+      "06.002.001.001": {
+        "centros_para_somar": [
+          "06.001.002",
+          "06.002.001"
+        ],
+        "observacoes": "Mapeamento criado automaticamente"
+      },
+      "06.002.002.001": {
+        "centros_para_somar": [
+          "06.001.003",
+          "06.002.002"
+        ],
+        "observacoes": "Mapeamento criado automaticamente"
+      },
+      "06.002.003.002": {
+        "centros_para_somar": [
+          "06.001.001",
+          "06.003.001"
+        ],
+        "observacoes": "Mapeamento criado automaticamente"
+      },
+      "06.002.003.003": {
+        "centros_para_somar": [
+          "06.003.002"
+        ],
+        "observacoes": "Mapeamento criado automaticamente"
+      },
+      "06.002.003.004": {
+        "centros_para_somar": [
+          "06.003.003"
+        ],
+        "observacoes": "Mapeamento criado automaticamente"
+      },
+      "06.002.004.002": {
+        "centros_para_somar": [
+          "05.002.002",
+          "06.001.004",
+          "06.002.003"
+        ],
+        "observacoes": "Mapeamento criado automaticamente"
+      },
+      "06.005.001.001": {
+        "centros_para_somar": [
+          "06.004.001"
+        ],
+        "observacoes": "Mapeamento criado automaticamente"
+      },
+      "06.005.002.001": {
+        "centros_para_somar": [
+          "06.004.002"
+        ],
+        "observacoes": "Mapeamento criado automaticamente"
+      },
+      "06.005.003.001": {
+        "centros_para_somar": [
+          "06.004.003"
+        ],
+        "observacoes": "Mapeamento criado automaticamente"
+      },
+      "06.007.001.002": {
+        "centros_para_somar": [
+          "06.006.002"
+        ],
+        "observacoes": "Mapeamento criado automaticamente"
+      },
+      "06.007.001.003": {
+        "centros_para_somar": [
+          "06.005.003",
+          "06.005.004",
+          "06.006.003",
+          "06.006.004"
+        ],
+        "observacoes": "Mapeamento criado automaticamente"
+      },
+      "07.001.001.004": {
+        "centros_para_somar": [
+          "07.001.002"
+        ],
+        "observacoes": "Mapeamento criado automaticamente"
+      },
+      "07.001.002.001": {
+        "centros_para_somar": [
+          "07.001.003"
+        ],
+        "observacoes": "Mapeamento criado automaticamente"
+      },
+      "07.001.003.001": {
+        "centros_para_somar": [
+          "07.001.001"
+        ],
+        "observacoes": "Mapeamento criado automaticamente"
+      },
+      "07.001.003.005": {
+        "centros_para_somar": [
+          "07.001.004"
+        ],
+        "observacoes": "Mapeamento criado automaticamente"
+      },
+      "08.001.001.001": {
+        "centros_para_somar": [
+          "08.001.001",
+          "08.002.001"
+        ],
+        "observacoes": "Mapeamento criado automaticamente"
+      },
+      "08.001.002.001": {
+        "centros_para_somar": [
+          "08.001.002",
+          "08.002.002"
+        ],
+        "observacoes": "Mapeamento criado automaticamente"
+      },
+      "08.001.003.007": {
+        "centros_para_somar": [
+          "08.001.003",
+          "08.002.003"
+        ],
+        "observacoes": "Mapeamento criado automaticamente"
+      },
+      "08.001.004.001": {
+        "centros_para_somar": [
+          "08.001.004",
+          "08.002.004"
+        ],
+        "observacoes": "Mapeamento criado automaticamente"
+      },
+      "09.001.001.001": {
+        "centros_para_somar": [
+          "09.001.001"
+        ],
+        "observacoes": "Mapeamento criado automaticamente"
+      },
+      "09.002.001.003": {
+        "centros_para_somar": [
+          "09.002.001"
+        ],
+        "observacoes": "Mapeamento criado automaticamente"
+      },
+      "09.003.001.001": {
+        "centros_para_somar": [
+          "09.003.001"
+        ],
+        "observacoes": "Mapeamento criado automaticamente"
+      },
+      "13.002.001.001": {
+        "centros_para_somar": [
+          "13.002.001"
+        ],
+        "observacoes": "Mapeamento criado automaticamente"
+      },
+      "16.001.001.001": {
+        "centros_para_somar": [
+          "16.001.001"
+        ],
+        "observacoes": "Mapeamento criado automaticamente"
+      },
+      "01.001.006.001": {
+        "centros_para_somar": [
+          "05.001.002"
+        ],
+        "observacoes": "Mapeamento criado automaticamente"
+      }
+  }
+}
+}

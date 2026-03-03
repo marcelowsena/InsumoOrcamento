@@ -1,0 +1,6 @@
+include README.md
+include LICENSE
+include .env.example
+recursive-include siengeapi *.py
+exclude siengeapi/bases/*.json
+exclude .env
