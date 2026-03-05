@@ -31,3 +31,6 @@ env/
 venv/
 .venv/
 envsemaforico/
+
+# Claude Code settings
+.claude/
