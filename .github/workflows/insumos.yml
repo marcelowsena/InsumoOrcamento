@@ -52,7 +52,11 @@ jobs:
           SIENGE_BASE_URL=${{ secrets.INSUMOS_SIENGE_BASE_URL }}
           EOF
 
-      # 6. Executar geração do relatório e upload para SharePoint
+      # 6. Inicializar bases de fornecedores (pedidos, títulos bulk, contratos)
+      - name: Inicializar bases
+        run: python init_bases.py
+
+      # 7. Executar geração do relatório e upload para SharePoint
       - name: Gerar relatório e enviar para SharePoint
         run: python main.py --export-excel
 
