@@ -30,8 +30,10 @@ def create_directories():
 def get_api_config() -> Dict:
     """Configurações da API Sienge"""
     return {
-        'user': os.getenv('SIENGE_USER', 'trust-francisco'),
-        'password': os.getenv('SIENGE_PASSWORD', '***REMOVED***'),
+        # Credenciais vêm SOMENTE de variáveis de ambiente (.env / GitHub Secrets).
+        # Nunca defina valor padrão aqui: o repositório pode ser exposto.
+        'user': os.getenv('SIENGE_USER'),
+        'password': os.getenv('SIENGE_PASSWORD'),
         'subdomain': os.getenv('SIENGE_SUBDOMAIN', 'trust'),
         'timeout': int(os.getenv('API_TIMEOUT', '60')),
         'max_retries': int(os.getenv('API_MAX_RETRIES', '3')),

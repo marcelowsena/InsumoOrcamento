@@ -1,10 +1,16 @@
 @echo off
 echo Instalando dependencias...
-pip install flask
+pip install flask waitress python-dotenv
 
 echo.
-echo Liberando porta no firewall...
-netsh advfirewall firewall add rule name="Webhook Sienge" dir=in action=allow protocol=tcp localport=5000 >nul 2>&1
+if not exist .env (
+    echo ERRO: crie o arquivo .env com WEBHOOK_TOKEN antes de iniciar. Veja .env.example
+    pause
+    exit /b 1
+)
+
+REM A regra de firewall NAO e mais criada automaticamente.
+REM A exposicao externa deve ser feita pela TI, de preferencia via proxy reverso com HTTPS.
 
 echo.
 echo Iniciando servidor...
