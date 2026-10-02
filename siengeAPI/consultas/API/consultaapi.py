@@ -35,8 +35,13 @@ def formalink(linkdic):
     return(raizlink)
 
 def puxaDados(link):
-    response = requests.get(link, auth=HTTPBasicAuth(user, pw)).text
-    retornos = json.loads(response)
+    response = requests.get(link, auth=HTTPBasicAuth(user, pw))
+    # Falha explícita: sem isso, uma resposta de erro (ex.: 401) era tratada como dados
+    if response.status_code == 401:
+        raise RuntimeError("Sienge recusou as credenciais (HTTP 401). Verifique SIENGE_USER/SIENGE_PASSWORD.")
+    if response.status_code == 403:
+        raise RuntimeError("Sienge negou acesso (HTTP 403). Verifique as permissões do usuário de API.")
+    retornos = json.loads(response.text)
     return(retornos)
 
 def consultaAPI(diclink):
