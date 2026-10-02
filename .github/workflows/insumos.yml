@@ -17,6 +17,15 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 360
 
+    # Credenciais Sienge passadas direto como variáveis de ambiente (não gravadas
+    # em arquivo): evita que caracteres especiais da senha sejam alterados pelo
+    # parser do .env. Os scripts não sobrescrevem estas variáveis, pois o .env
+    # gerado abaixo não contém chaves SIENGE_*.
+    env:
+      SIENGE_USER: ${{ secrets.INSUMOS_SIENGE_USER }}
+      SIENGE_PASSWORD: ${{ secrets.INSUMOS_SIENGE_PASSWORD }}
+      SIENGE_BASE_URL: ${{ secrets.INSUMOS_SIENGE_BASE_URL }}
+
     steps:
       # 1. Checkout do repositório
       - name: Checkout
@@ -39,23 +48,12 @@ jobs:
           cat > .env << 'EOF'
           BUILDING_UNIT_IDS_ALLOWED=1
           DEFAULT_END_DATE=2060-12-31
-          SIENGE_USER=${{ secrets.INSUMOS_SIENGE_USER }}
-          SIENGE_PASSWORD=${{ secrets.INSUMOS_SIENGE_PASSWORD }}
           SHAREPOINT_TENANT_ID=${{ secrets.INSUMOS_SHAREPOINT_TENANT_ID }}
           SHAREPOINT_CLIENT_ID=${{ secrets.INSUMOS_SHAREPOINT_CLIENT_ID }}
           SHAREPOINT_CLIENT_SECRET=${{ secrets.INSUMOS_SHAREPOINT_CLIENT_SECRET }}
           SHAREPOINT_DRIVE_ID=${{ secrets.INSUMOS_SHAREPOINT_DRIVE_ID }}
           SHAREPOINT_PASTA_DESTINO=${{ secrets.INSUMOS_SHAREPOINT_PASTA_DESTINO }}
           SHAREPOINT_ENABLED=true
-          EOF
-
-      # 5. Criar .env do siengeAPI
-      - name: Criar .env siengeAPI
-        run: |
-          cat > siengeAPI/.env << 'EOF'
-          SIENGE_USER=${{ secrets.INSUMOS_SIENGE_USER }}
-          SIENGE_PASSWORD=${{ secrets.INSUMOS_SIENGE_PASSWORD }}
-          SIENGE_BASE_URL=${{ secrets.INSUMOS_SIENGE_BASE_URL }}
           EOF
 
       # 6. Inicializar bases de fornecedores (pedidos, títulos bulk, contratos)
