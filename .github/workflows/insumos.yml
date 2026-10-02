@@ -8,6 +8,10 @@ on:
   schedule:
     - cron: '0 23 * * *'
 
+# Repositório público: token do workflow apenas com leitura
+permissions:
+  contents: read
+
 jobs:
   gerar-e-enviar:
     runs-on: ubuntu-latest
@@ -62,12 +66,6 @@ jobs:
       - name: Gerar relatório e enviar para SharePoint
         run: python main.py --export-excel
 
-      # 7. Salvar artefato (disponível por 7 dias no GitHub)
-      - name: Salvar artefato
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: insumos-orcamento-${{ github.run_id }}
-          path: relatorios/*.xlsx
-          retention-days: 7
-          if-no-files-found: warn
+      # A planilha NÃO é publicada como artefato: o repositório é público e
+      # artefatos podem ser baixados por qualquer usuário do GitHub.
+      # O arquivo é entregue somente no SharePoint (etapa anterior).

@@ -6,6 +6,7 @@ VERSÃO INTEGRADA: Inclui títulos + contratos por padrão + processamento compl
 """
 
 import argparse
+import os
 import sys
 import time
 from datetime import datetime
@@ -603,7 +604,9 @@ def executar_export_excel(args, configs, logger):
         print(f"📁 Arquivo: {arquivo_gerado.name}")
         print(f"📊 Registros: {len(lancamentos_validos):,}")
         print(f"🗂️ Obras: {len(grupos_obras)} ({obras_com_wbs} com WBS)")
-        print(f"💰 Valor Total: R$ {relatorio_processamento['resumo_geral']['valor_total']:,.2f}")
+        # Logs do GitHub Actions são públicos neste repositório: não expor valores financeiros
+        if not os.getenv('GITHUB_ACTIONS'):
+            print(f"💰 Valor Total: R$ {relatorio_processamento['resumo_geral']['valor_total']:,.2f}")
         print(f"📦 Tamanho: {tamanho_mb:.2f} MB")
         print(f"⏱️ Tempo: {tempo_total:.1f}s")
         
