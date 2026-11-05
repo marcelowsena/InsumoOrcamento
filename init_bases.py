@@ -45,25 +45,39 @@ def gerar_itens_contratos(contratos):
     workitem = [copy.deepcopy(c) for c in contratos if c.get('itemType') == 'WORKITEM']
     print(f"Contratos WORKITEM: {len(workitem)} de {len(contratos)}")
 
+    from collections import Counter
+
     falhas = 0
+    # Formatos de resposta inesperados (só tipo/chaves, sem conteúdo: o log é público)
+    respostas_inesperadas = Counter()
     for i, c in enumerate(workitem, start=1):
         c['itens'] = {}
         try:
             obra = c['buildings'][0]['buildingId']
             for buid in BUILDING_UNITS_IDS:
                 itens = consultaItensContratos(c, buid)
-                # A API devolve um dict com 'status' quando a unidade não existe no contrato
-                if 'status' not in itens:
+                if isinstance(itens, list):
                     c['itens'][buid] = itens
                     if obra != OBRA_MULTI_UNIDADES:
                         break
+                elif isinstance(itens, dict) and 'status' in itens:
+                    # Unidade construtiva não existe no contrato: tenta a próxima
+                    continue
+                else:
+                    # Qualquer outra coisa (ex.: mensagem de erro) não é lista de itens;
+                    # antes era gravada na base e quebrava o processamento no main.py
+                    chaves = sorted(itens.keys()) if isinstance(itens, dict) else []
+                    raise ValueError(f"resposta inesperada {type(itens).__name__} {chaves}")
         except Exception as e:
             falhas += 1
-            print(f"  Aviso: falha ao consultar itens do contrato {c.get('documentId')}/{c.get('contractNumber')}: {e}")
+            c['itens'] = {}
+            respostas_inesperadas[str(e)[:120]] += 1
         if i % 200 == 0:
             print(f"  {i}/{len(workitem)} contratos processados")
 
     print(f"Itens de contratos: {len(workitem) - falhas} ok, {falhas} com falha")
+    for motivo, qtd in respostas_inesperadas.most_common(10):
+        print(f"  Falha ({qtd}x): {motivo}")
     # Muitas falhas indicam problema na API: melhor falhar o job do que gerar relatório incompleto
     if workitem and falhas > len(workitem) * 0.1:
         raise RuntimeError(f"{falhas} de {len(workitem)} contratos falharam ao consultar itens")
