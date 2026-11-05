@@ -44,7 +44,7 @@ from core.merge_engine import (
 from core.excel_generator import (
     gerar_excel_completo, gerar_excel_simples, gerar_nome_arquivo
 )
-from utils.sharepoint import enviar_para_sharepoint
+from utils.sharepoint import enviar_para_sharepoint, get_sharepoint_config
 
 
 def parse_arguments():
@@ -621,10 +621,18 @@ def executar_export_excel(args, configs, logger):
         print("="*60)
 
         # Enviar para SharePoint
-        enviar_para_sharepoint(arquivo_gerado)
+        upload_ok = enviar_para_sharepoint(arquivo_gerado)
 
         log_processing_summary(logger, len(obras_incluidas), len(resultados),
                              len([r for r in resultados if 'erro' not in r.get('relatorio_bruto', {})]), tempo_total)
+
+        # Upload habilitado e falhou (ex.: arquivo bloqueado por edição no Excel
+        # Online): termina com erro para o GitHub Actions marcar a execução como
+        # falha, em vez de "sucesso" com o SharePoint desatualizado.
+        if not upload_ok and get_sharepoint_config()['enabled']:
+            logger.error("Upload para o SharePoint falhou; relatório não foi publicado.")
+            print("❌ Relatório gerado, mas NÃO foi enviado ao SharePoint.")
+            return False
 
         return True
         
