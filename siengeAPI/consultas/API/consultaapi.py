@@ -1,6 +1,7 @@
 import requests
 import json
 import os
+import time
 from dotenv import load_dotenv, find_dotenv
 from requests.auth import HTTPBasicAuth
 from pathlib import Path
@@ -34,8 +35,31 @@ def formalink(linkdic):
             raizlink+= var+str(linkdic[var])
     return(raizlink)
 
+MAX_TENTATIVAS = 6
+STATUS_RETENTAVEIS = {429, 500, 502, 503, 504}
+
+
+def _espera_retentativa(response, tentativa):
+    """Segundos de espera antes de repetir: usa Retry-After se vier, senão backoff exponencial."""
+    retry_after = response.headers.get('Retry-After')
+    if retry_after and retry_after.isdigit():
+        return min(int(retry_after), 120)
+    return min(5 * (2 ** (tentativa - 1)), 120)  # 5, 10, 20, 40, 80s
+
+
 def puxaDados(link):
-    response = requests.get(link, auth=HTTPBasicAuth(user, pw))
+    # Repete em limite de requisições (429) e erros temporários do servidor (5xx).
+    # Sem isso, a resposta de erro era devolvida como se fossem dados.
+    for tentativa in range(1, MAX_TENTATIVAS + 1):
+        response = requests.get(link, auth=HTTPBasicAuth(user, pw))
+        if response.status_code not in STATUS_RETENTAVEIS or tentativa == MAX_TENTATIVAS:
+            break
+        espera = _espera_retentativa(response, tentativa)
+        print(f"  Sienge HTTP {response.status_code}: aguardando {espera}s (tentativa {tentativa}/{MAX_TENTATIVAS})")
+        time.sleep(espera)
+
+    if response.status_code in STATUS_RETENTAVEIS:
+        raise RuntimeError(f"Sienge respondeu HTTP {response.status_code} após {MAX_TENTATIVAS} tentativas.")
     # Falha explícita: sem isso, uma resposta de erro (ex.: 401) era tratada como dados
     if response.status_code == 401:
         raise RuntimeError("Sienge recusou as credenciais (HTTP 401). Verifique SIENGE_USER/SIENGE_PASSWORD.")

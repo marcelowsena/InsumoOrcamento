@@ -272,11 +272,17 @@ def processar_contratos_para_lancamentos(contratos: List[Dict], building_units_c
     
     iterator = tqdm(contratos, desc="Processando contratos", disable=not TQDM_AVAILABLE) if TQDM_AVAILABLE else contratos
     
+    grupos_invalidos = 0
     for contract in iterator:
-        contract_id = contract.get("documentId", "")
+        # documentId é o tipo de documento (CT, NFPJ...); o número identifica o contrato
+        contract_id = f"{contract.get('documentId', '')}.{contract.get('contractNumber', '')}"
         try:
             items_data = contract.get("itens", {})
             for group_key, items_list in items_data.items():
+                # Bases antigas podem ter respostas de erro da API no lugar da lista de itens
+                if not isinstance(items_list, list):
+                    grupos_invalidos += 1
+                    continue
                 for item in items_list:
                     lancamentos_item = processar_item_contrato(contract, item, building_units_config, logger)
                     
@@ -290,6 +296,8 @@ def processar_contratos_para_lancamentos(contratos: List[Dict], building_units_c
             logger.error(f"Erro ao processar contrato {contract_id}: {str(e)}")
             continue
     
+    if grupos_invalidos:
+        logger.warning(f"{grupos_invalidos} grupos de itens ignorados (resposta da API não era lista de itens)")
     logger.info(f"Contratos processados: {len(todos_lancamentos)} lançamentos gerados")
     logger.info(f"Contratos com medições: {contratos_com_medicao}")
     logger.info(f"Total de lançamentos de medições: {total_medicoes}")
