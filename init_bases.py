@@ -17,11 +17,57 @@ ARQUIVOS_NECESSARIOS = [
     BASES_PATH / 'basePedidos.json',
     BASES_PATH / 'bulkTitulos.json',
     BASES_PATH / 'baseInContratosPreco.json',
+    # Lida por src/api/contracts_api.py (contratos WORKITEM com itens/apropriações)
+    BASES_PATH / 'baseContratosItens.json',
 ]
+
+# Unidades construtivas consultadas por contrato (mesma regra de
+# siengeAPI.atualizacaoBasesSienge.atualizaContratos)
+BUILDING_UNITS_IDS = list(range(1, 9))
+OBRA_MULTI_UNIDADES = 2014
 
 
 def bases_existem():
     return all(f.exists() for f in ARQUIVOS_NECESSARIOS)
+
+
+def gerar_itens_contratos(contratos):
+    """
+    Monta a base de itens de contratos no formato esperado por
+    src/api/contracts_api.py: cada contrato recebe 'itens' = {buildingUnitId: [itens]}.
+
+    Diferente de atualizaContratos(), consulta apenas contratos WORKITEM (os únicos
+    usados no relatório) e não consulta caução (não usada), reduzindo as chamadas à API.
+    """
+    import copy
+    from siengeAPI.consultas.API.origem import consultaItensContratos
+
+    workitem = [copy.deepcopy(c) for c in contratos if c.get('itemType') == 'WORKITEM']
+    print(f"Contratos WORKITEM: {len(workitem)} de {len(contratos)}")
+
+    falhas = 0
+    for i, c in enumerate(workitem, start=1):
+        c['itens'] = {}
+        try:
+            obra = c['buildings'][0]['buildingId']
+            for buid in BUILDING_UNITS_IDS:
+                itens = consultaItensContratos(c, buid)
+                # A API devolve um dict com 'status' quando a unidade não existe no contrato
+                if 'status' not in itens:
+                    c['itens'][buid] = itens
+                    if obra != OBRA_MULTI_UNIDADES:
+                        break
+        except Exception as e:
+            falhas += 1
+            print(f"  Aviso: falha ao consultar itens do contrato {c.get('documentId')}/{c.get('contractNumber')}: {e}")
+        if i % 200 == 0:
+            print(f"  {i}/{len(workitem)} contratos processados")
+
+    print(f"Itens de contratos: {len(workitem) - falhas} ok, {falhas} com falha")
+    # Muitas falhas indicam problema na API: melhor falhar o job do que gerar relatório incompleto
+    if workitem and falhas > len(workitem) * 0.1:
+        raise RuntimeError(f"{falhas} de {len(workitem)} contratos falharam ao consultar itens")
+    return workitem
 
 
 def gerar_bases():
@@ -41,6 +87,9 @@ def gerar_bases():
     print("Gerando base de contratos...")
     contratos = consultaContratos(basedepreco=True)
     ab.contratos(contratos)
+
+    print("Gerando base de itens de contratos (WORKITEM)...")
+    ab.itensContratos(gerar_itens_contratos(contratos))
 
     print("Bases geradas com sucesso.")
 
