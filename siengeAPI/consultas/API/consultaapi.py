@@ -35,7 +35,9 @@ def formalink(linkdic):
             raizlink+= var+str(linkdic[var])
     return(raizlink)
 
-MAX_TENTATIVAS = 6
+# 10 tentativas: 5+10+20+40+80+120*4 ≈ 10,5 min de espera total. Com 6 (≈2,5 min)
+# o job caiu em 18/11 e 19/11/2026 com o Sienge respondendo 502 por alguns minutos.
+MAX_TENTATIVAS = 10
 STATUS_RETENTAVEIS = {429, 500, 502, 503, 504}
 
 
@@ -44,7 +46,7 @@ def _espera_retentativa(response, tentativa):
     retry_after = response.headers.get('Retry-After')
     if retry_after and retry_after.isdigit():
         return min(int(retry_after), 120)
-    return min(5 * (2 ** (tentativa - 1)), 120)  # 5, 10, 20, 40, 80s
+    return min(5 * (2 ** (tentativa - 1)), 120)  # 5, 10, 20, 40, 80, 120, 120...
 
 
 def puxaDados(link):

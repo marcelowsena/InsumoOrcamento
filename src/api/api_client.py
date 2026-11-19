@@ -13,6 +13,18 @@ from typing import Dict, List, Optional, Tuple
 from requests.auth import HTTPBasicAuth
 from urllib.parse import urlencode
 
+# Tentativas para HTTP 429/5xx: 5+10+20+40+80+120*4 ≈ 10,5 min de espera total
+MAX_TENTATIVAS_SERVIDOR = 10
+ESPERA_MAXIMA_SEGUNDOS = 120
+
+
+def tempo_espera_servidor(response, tentativa: int) -> int:
+    """Segundos até a próxima tentativa: Retry-After do Sienge, senão backoff exponencial."""
+    retry_after = response.headers.get('Retry-After', '')
+    if retry_after.isdigit():
+        return min(int(retry_after), ESPERA_MAXIMA_SEGUNDOS)
+    return min(5 * (2 ** (tentativa - 1)), ESPERA_MAXIMA_SEGUNDOS)
+
 
 def create_api_session(api_config: Dict) -> requests.Session:
     """Cria sessão HTTP configurada"""
@@ -34,8 +46,14 @@ def fazer_requisicao_com_retry(session: requests.Session, url: str, api_config: 
     max_retries = api_config['max_retries']
     base_timeout = api_config['timeout']
     delay = api_config['delay']
-    
-    for tentativa in range(max_retries):
+
+    # Limite de requisições (429) e instabilidade do Sienge (5xx) têm contador
+    # próprio e mais longo que max_retries: quedas de alguns minutos e o limite
+    # de taxa derrubavam o job inteiro (runs de 08/11, 18/11 e 19/11/2026).
+    tentativa_servidor = 0
+
+    tentativa = 0
+    while tentativa < max_retries:
         try:
             timeout = base_timeout + (tentativa * 30)
             
@@ -48,29 +66,35 @@ def fazer_requisicao_com_retry(session: requests.Session, url: str, api_config: 
             erro = f"Timeout na tentativa {tentativa + 1}/{max_retries}"
             if tentativa < max_retries - 1:
                 time.sleep(delay * (2 ** tentativa))
+                tentativa += 1
                 continue
             return False, {"erro": f"{erro}. URL: {url}"}
-            
+
         except requests.exceptions.HTTPError as e:
-            if response.status_code == 404:
+            status = response.status_code
+            if status == 404:
                 return False, {"erro": f"Recurso não encontrado (404). URL: {url}"}
-            elif response.status_code == 401:
+            elif status == 401:
                 return False, {"erro": f"Credenciais inválidas (401). Verifique user/password"}
-            elif response.status_code == 403:
+            elif status == 403:
                 return False, {"erro": f"Acesso negado (403). Usuário sem permissão"}
-            elif response.status_code >= 500:
-                erro = f"Erro do servidor ({response.status_code})"
-                if tentativa < max_retries - 1:
-                    time.sleep(delay * (2 ** tentativa))
-                    continue
-                return False, {"erro": f"{erro}. URL: {url}"}
+            elif status == 429 or status >= 500:
+                tentativa_servidor += 1
+                if tentativa_servidor < MAX_TENTATIVAS_SERVIDOR:
+                    espera = tempo_espera_servidor(response, tentativa_servidor)
+                    print(f"  Sienge HTTP {status}: aguardando {espera}s "
+                          f"(tentativa {tentativa_servidor}/{MAX_TENTATIVAS_SERVIDOR})")
+                    time.sleep(espera)
+                    continue  # não consome tentativa de timeout/conexão
+                return False, {"erro": f"Sienge HTTP {status} após {MAX_TENTATIVAS_SERVIDOR} tentativas. URL: {url}"}
             else:
-                return False, {"erro": f"HTTP {response.status_code}: {str(e)}"}
-                
+                return False, {"erro": f"HTTP {status}: {str(e)}"}
+
         except requests.exceptions.ConnectionError as e:
             erro = f"Erro de conexão na tentativa {tentativa + 1}/{max_retries}"
             if tentativa < max_retries - 1:
                 time.sleep(delay * (2 ** tentativa))
+                tentativa += 1
                 continue
             return False, {"erro": f"{erro}. Verifique conexão de rede"}
             
