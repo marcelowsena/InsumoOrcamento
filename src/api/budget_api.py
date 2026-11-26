@@ -10,6 +10,9 @@ from datetime import datetime, timedelta
 from pathlib import Path
 from typing import Dict, List, Tuple, Optional
 from requests import Session
+from urllib.parse import urlencode
+
+from .api_client import fazer_requisicao_com_retry
 
 
 def gerar_chave_cache_wbs(obra_id: int, sheet_id: int = 1) -> str:
@@ -70,69 +73,71 @@ def salvar_cache_wbs(cache_dir: Path, obra_id: int, mapeamento: Dict, total_iten
 
 
 def buscar_sheets_orcamento(session: Session, obra_id: int, api_config: Dict, logger) -> Optional[List[Dict]]:
-    """Busca sheets de orçamento disponíveis para uma obra"""
+    """
+    Busca sheets de orçamento disponíveis para uma obra.
+    Returns: lista de sheets ([] = obra sem orçamento) ou None se a API falhou.
+    """
     url = f"{api_config['base_url']}/v1/building-cost-estimations/{obra_id}/sheets"
     params = {'offset': 0, 'limit': 100}
-    
+
     logger.debug(f"Buscando sheets de orçamento para obra {obra_id}")
-    
-    try:
-        response = session.get(url, params=params, timeout=api_config['timeout'])
-        response.raise_for_status()
-        
-        data = response.json()
-        sheets = data.get('results', [])
-        
-        logger.debug(f"Obra {obra_id}: {len(sheets)} sheets encontrados")
-        return sheets
-        
-    except Exception as e:
-        logger.warning(f"Erro ao buscar sheets da obra {obra_id}: {str(e)}")
+
+    # Com retry (timeout, 429, 5xx): uma falha momentânea virava "obra sem orçamento"
+    sucesso, data = fazer_requisicao_com_retry(session, f"{url}?{urlencode(params)}", api_config)
+    if not sucesso:
+        if 'Recurso não encontrado (404)' in data.get('erro', ''):
+            return []  # Sienge responde 404 quando a obra não tem orçamento
+        logger.error(f"Erro ao buscar sheets da obra {obra_id}: {data.get('erro')}")
         return None
 
+    sheets = data.get('results', [])
+    logger.debug(f"Obra {obra_id}: {len(sheets)} sheets encontrados")
+    return sheets
 
-def buscar_itens_sheet_paginado(session: Session, obra_id: int, sheet_id: int, 
-                               api_config: Dict, logger) -> List[Dict]:
-    """Busca todos os itens de um sheet com paginação automática"""
+
+def buscar_itens_sheet_paginado(session: Session, obra_id: int, sheet_id: int,
+                               api_config: Dict, logger) -> Tuple[List[Dict], bool]:
+    """
+    Busca todos os itens de um sheet com paginação automática.
+    Returns: (itens, completo). completo=False se alguma página falhou mesmo após
+    as novas tentativas — nesse caso os itens são parciais.
+    """
     url = f"{api_config['base_url']}/v1/building-cost-estimations/{obra_id}/sheets/{sheet_id}/items"
-    
+
     logger.info(f"Buscando itens WBS: Obra {obra_id}, Sheet {sheet_id}")
-    
+
     todos_itens = []
     offset = 0
     limit = 200
-    
+
     while True:
         params = {'offset': offset, 'limit': limit}
-        
-        try:
-            logger.debug(f"Obra {obra_id}: página {offset//limit + 1} (offset: {offset})")
-            
-            response = session.get(url, params=params, timeout=api_config['timeout'])
-            response.raise_for_status()
-            
-            data = response.json()
-            itens = data.get('results', [])
-            
-            if not itens:
-                break
-            
-            todos_itens.extend(itens)
-            logger.debug(f"Obra {obra_id}: +{len(itens)} itens (total: {len(todos_itens)})")
-            
-            # Se retornou menos que o limite, chegamos ao fim
-            if len(itens) < limit:
-                break
-            
-            offset += limit
-            time.sleep(api_config.get('delay', 1.0))
-            
-        except Exception as e:
-            logger.error(f"Erro ao buscar página {offset//limit + 1} da obra {obra_id}: {str(e)}")
+        logger.debug(f"Obra {obra_id}: página {offset//limit + 1} (offset: {offset})")
+
+        # Com retry (timeout, 429, 5xx). Antes um único timeout encerrava a
+        # paginação em silêncio (ex.: 26/11/2026, obra 209 com 3.800 de 6.897 itens).
+        sucesso, data = fazer_requisicao_com_retry(session, f"{url}?{urlencode(params)}", api_config)
+        if not sucesso:
+            logger.error(f"Erro ao buscar página {offset//limit + 1} da obra {obra_id}: "
+                         f"{data.get('erro')} — EAP incompleta ({len(todos_itens)} itens)")
+            return todos_itens, False
+
+        itens = data.get('results', [])
+        if not itens:
             break
-    
+
+        todos_itens.extend(itens)
+        logger.debug(f"Obra {obra_id}: +{len(itens)} itens (total: {len(todos_itens)})")
+
+        # Se retornou menos que o limite, chegamos ao fim
+        if len(itens) < limit:
+            break
+
+        offset += limit
+        time.sleep(api_config.get('delay', 1.0))
+
     logger.info(f"Obra {obra_id}: {len(todos_itens)} itens WBS coletados")
-    return todos_itens
+    return todos_itens, True
 
 
 def criar_mapeamento_wbs(itens_sheet: List[Dict], logger) -> Dict[str, str]:
@@ -261,17 +266,28 @@ def buscar_mapeamento_wbs_obra(session: Session, obra_id: int, api_config: Dict,
     
     # 1. Verificar se obra tem orçamento
     sheets = buscar_sheets_orcamento(session, obra_id, api_config, logger)
+    if sheets is None:
+        # Falha da API (não é "sem orçamento"): não grava cache, tenta na próxima execução
+        logger.error(f"Obra {obra_id}: EAP indisponível nesta execução (falha na API)")
+        return {}
     if not sheets:
         logger.warning(f"Obra {obra_id}: sem sheets de orçamento")
         # Salvar cache vazio para evitar tentar novamente
         if cache_config.get('enabled', True):
             salvar_cache_wbs(cache_config['directory'], obra_id, {}, 0)
         return {}
-    
+
     # 2. Buscar itens do sheet 1 (padrão)
     sheet_id = 1
-    itens = buscar_itens_sheet_paginado(session, obra_id, sheet_id, api_config, logger)
-    
+    itens, completo = buscar_itens_sheet_paginado(session, obra_id, sheet_id, api_config, logger)
+
+    if not completo:
+        # Usa o que veio nesta execução, mas não grava em cache: uma EAP parcial
+        # ficaria valendo por até 7 dias (validity_hours) em execuções locais
+        mapeamento = criar_mapeamento_wbs(itens, logger) if itens else {}
+        logger.error(f"Obra {obra_id}: EAP incompleta ({len(mapeamento)} códigos), não salva em cache")
+        return mapeamento
+
     if not itens:
         logger.warning(f"Obra {obra_id}: sem itens no sheet {sheet_id}")
         # Salvar cache vazio
