@@ -4,16 +4,60 @@ on:
   # Disparo manual pelo GitHub
   workflow_dispatch:
 
-  # Agendamento automático: todo dia às 20:00 (horário de Brasília = 23:00 UTC)
   schedule:
+    # Principal: todo dia às 20:00 (horário de Brasília = 23:00 UTC).
+    # Na prática o GitHub tem iniciado com 3 a 7 horas de atraso.
     - cron: '0 23 * * *'
+    # Reserva: 06:00 (Brasília = 09:00 UTC). Só gera o relatório se nenhuma
+    # execução terminou com sucesso nas últimas 12 horas — cobre noites em que
+    # a API do Sienge fica fora do ar (ex.: HTTP 502 em 18/11, 19/11 e 26/11/2026).
+    - cron: '0 9 * * *'
 
 # Repositório público: token do workflow apenas com leitura
 permissions:
   contents: read
 
+# Nunca roda duas execuções ao mesmo tempo (disputariam o limite de requisições
+# do Sienge). Uma nova espera a anterior terminar, sem cancelá-la.
+concurrency:
+  group: insumos-orcamento
+  cancel-in-progress: false
+
 jobs:
+  verificar:
+    runs-on: ubuntu-latest
+    permissions:
+      actions: read
+    outputs:
+      executar: ${{ steps.decisao.outputs.executar }}
+    steps:
+      - name: Decidir se gera o relatório
+        id: decisao
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          AGENDAMENTO: ${{ github.event.schedule }}
+        run: |
+          # Execução principal e disparo manual sempre geram o relatório
+          if [ "$AGENDAMENTO" != "0 9 * * *" ]; then
+            echo "executar=true" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          desde=$(date -u -d '12 hours ago' +%Y-%m-%dT%H:%M:%SZ)
+          sucessos=$(gh api -X GET "repos/$REPO/actions/workflows/insumos.yml/runs" \
+            -f status=success -f created=">=$desde" -f per_page=1 --jq '.total_count')
+          echo "Execuções com sucesso desde $desde: $sucessos"
+          if [ "$sucessos" -gt 0 ]; then
+            echo "Relatório já atualizado; execução de reserva não é necessária."
+            echo "executar=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "Nenhum sucesso recente; a execução de reserva vai gerar o relatório."
+            echo "executar=true" >> "$GITHUB_OUTPUT"
+          fi
+
   gerar-e-enviar:
+    needs: verificar
+    if: needs.verificar.outputs.executar == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 360
 
